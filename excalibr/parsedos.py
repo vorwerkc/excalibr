@@ -7,6 +7,15 @@ from math import *
 import os
 
 class dos:
+	"""
+	Object to store the data contained in the dos.xml file
+	of an exciting calculation.
+	Args:
+		name (string): filename of the dos xml information
+	.. attribute :: name
+	 	associated filename
+
+	"""
 	def __init__(self, name):
 		if os.path.isfile(name):
 			self.setparameter(name)
@@ -27,7 +36,7 @@ class dos:
 	def getdos(self,array):
 		if not self.spin:
 			pdos=np.zeros(self.nw)
-			for m in array:	
+			for m in array:
 				mdos = [float(xe) for xe in m.xpath("./point/@dos")]
 				for i in range(0,self.nw):
 					pdos[i] = pdos[i] + mdos[i]
@@ -44,7 +53,7 @@ class dos:
 					mdos = [float(xe) for xe in m.xpath("./point/@dos")]
 					for i in range(0,self.nw):
 						downpdos[i] = downpdos[i] + mdos[i]
-			pdos=[uppdos, downpdos]		
+			pdos=[uppdos, downpdos]
 		return  pdos
 
 	def species(self, species):
