@@ -1,5 +1,3 @@
-
-<!DOCTYPE html>
 <html>
 <body>
   <div tabindex="-1" id="notebook" class="border-box-sizing">
@@ -34,7 +32,7 @@ Conda Environments
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>I highly recommend to download the conda version, which contains python 3.5. If you do so, you need to create a conda environment to execute $\texttt{exciting}$ python 2 EXCITINGSCRIPTS commands in:</p>
+<p>I highly recommend to download the conda version, which contains python 3.5. If you do so, you need to create a conda environment to execute <tt>exciting</tt> python 2 EXCITINGSCRIPTS commands in:</p>
 
 <pre><code>conda create --name exciting python=2.7
 
