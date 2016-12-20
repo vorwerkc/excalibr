@@ -132,9 +132,40 @@ def parse_input(name):
                     for node2 in node.find('path').getiterator('point'):
                         path2.append(node2.get('label'))
                         if str(node2.get('label')) not in kpoints:
-                            coords=[float(i) for i in node2.get('coord').split('   ')]
+                            coords=[float(i) for i in node2.get('coord').split()]
                             kpoints[node2.get('label')]=coords
                     path.append(path2)
                 properties['bandstructure']={'path':path, 'kpoints': kpoints}
         excitingInput['properties']=properties
     return excitingInput
+def comp_input(name1,name2):
+    try:
+        input1=parse_input(name1)
+        input2=parse_input(name2)
+    except IOError:
+        print('One of the files was not found!')
+    i=0
+    diff={}
+    out1={}
+    out2={}
+    _comp_inp_(input1,input2,out1,diff)
+    _comp_inp_(input2,input1,out2,diff)
+    missing=[out1,out2]
+    return missing, diff
+
+
+def _comp_inp_(dict1,dict2,out,diff):
+    for key1 in dict1.keys():
+        if key1 not in dict2:
+            out[key1]=dict1[key1]
+        elif (key1 in dict2) and (dict1[key1] != dict2[key1]) \
+        and (key1 not in diff):
+            if type(dict1[key1]) != dict:
+                diff[key1]=[dict1[key1],dict2[key1]]
+            else:
+                diff[key1]={}
+                out[key1]={}
+                _comp_inp_(dict1[key1],dict2[key1],out[key1],diff[key1])
+                if out[key1]=={}:
+                    del out[key1]
+    return
