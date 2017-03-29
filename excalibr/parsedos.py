@@ -57,7 +57,7 @@ class dos:
         return  pdos
 
     def species(self, species):
-            """
+        """
             Function to obtain the DOS projected onto a specific species
             Args:
                 int:: species
@@ -66,13 +66,13 @@ class dos:
             Returns:
                 list :: list with DOS value in $Ha^{-1}\Omega^{-1}$, where $\Omega$ is 
                     the volume of the unit cell. The list has length len(dos.energies)
-            """
+        """
         m_array =self.tree.xpath('/dos/partialdos[@speciesrn="%s"]/diagram'%(species))
         pdos=self._getdos(m_array)
         return pdos
 
     def atom(self, species, atom):
-            """
+        """
             Function to obtain the DOS projected onto a specific atom
             Args:
                 int:: species
@@ -84,13 +84,13 @@ class dos:
             Returns:
                 list :: list with DOS value in $Ha^{-1}\Omega^{-1}$, where $\Omega$ is 
                     the volume of the unit cell. The list has length len(dos.energies)
-            """
+        """
         m_array =self.tree.xpath('/dos/partialdos[@speciesrn="%s"][@atom="%s"]/diagram'%(species,atom))
         pdos=self._getdos(m_array)
         return pdos
 
     def angular(self,l):
-            """
+        """
             Function to obtain the DOS projected onto a specific l-channel
             Args:
                 int:: l
@@ -98,14 +98,14 @@ class dos:
             Returns:
                 list :: list with DOS value in $Ha^{-1}\Omega^{-1}$, where $\Omega$ is 
                     the volume of the unit cell. The list has length len(dos.energies)
-            """
+        """
 
-            m_array =self.tree.xpath('/dos/partialdos/diagram[@l="%s"]'%(l))
+        m_array =self.tree.xpath('/dos/partialdos/diagram[@l="%s"]'%(l))
         pdos=self._getdos(m_array)
         return pdos
 
     def speciesl(self,species,l):
-            """
+        """
             Function to obtain the DOS projected onto a specific species and l-channel
             Args:
                 int:: species
@@ -117,14 +117,14 @@ class dos:
             Returns:
                 list :: list with DOS value in $Ha^{-1}\Omega^{-1}$, where $\Omega$ is 
                     the volume of the unit cell. The list has length len(dos.energies)
-            """
+        """
 
         m_array =self.tree.xpath('/dos/partialdos[@speciesrn="%s"]/diagram[@l="%s"]'%(species,l))
         pdos=self._getdos(m_array)
         return pdos
 
     def atoml(self, species,atom,l):
-            """
+        """
             Function to obtain the DOS projected onto a specific atom and l-channel
             Args:
                 int:: species
@@ -138,30 +138,52 @@ class dos:
             Returns:
                 list :: list with DOS value in $Ha^{-1}\Omega^{-1}$, where $\Omega$ is 
                     the volume of the unit cell. The list has length len(dos.energies)
-            """
+        """
 
         m_array =self.tree.xpath('/dos/partialdos[@speciesrn="%s"][@atom="%s"]/diagram[@l="%s"]'%(species,atom,l))
         pdos=self._getdos(m_array)
         return pdos
+ 
+    def specieslm(self,species,l,m):
+        """
+            Function to obtain the DOS projected onto a specific species and  lm-channel
+            Args:
+                int:: species
+                    species number onto which to project. The number for each species
+                    can be found in INFO.OUT. Note that speciesnumber=1 for the first 
+                    species.
+                int :: l
+                    l-channel of the projection
+                int :: m
+                    m-channel of the projection
+            Returns:
+                list :: list with DOS value in $Ha^{-1}\Omega^{-1}$, where $\Omega$ is 
+                    the volume of the unit cell. The list has length len(dos.energies)
+        """
+
+        m_array =self.tree.xpath('/dos/partialdos[@speciesrn="%s"]/diagram[@l="%s"][@m="%s"]'%(species,l,m))
+        pdos=self._getdos(m_array)
+        return pdos
+
     def interstitial(self):
-            """
+        """
             Function to obtain the DOS projected onto the interstitial states
             Returns:
                 list :: list with DOS value in $Ha^{-1}\Omega^{-1}$, where $\Omega$ is 
                     the volume of the unit cell. The list has length len(dos.energies)
-            """
+        """
 
         m_array =self.tree.xpath('/dos/interstitialdos/diagram')
         pdos=self._getdos(m_array)
         return pdos
     def total(self):
-            """
+        """
             Function to obtain total DOS
             Returns:
                 list :: list with DOS value in $Ha^{-1}\Omega^{-1}$, where $\Omega$ is 
                     the volume of the unit cell. The list has length len(dos.energies)
-            """
+        """
 
-            m_array=self.tree.xpath('/dos/totaldos/diagram')
+        m_array=self.tree.xpath('/dos/totaldos/diagram')
         pdos=self._getdos(m_array)
         return pdos

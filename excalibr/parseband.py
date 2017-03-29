@@ -36,7 +36,11 @@ class bandstr:
             self.bands =len(self.tree.xpath('/bandstructure/band'))
 
     def _getband(self, bandnr):
-        y = [float(xe)*27.211 for xe in self.tree.xpath("/bandstructure/band[%i]/point/@eval"%(bandnr))]
+        if not self.character:
+            y = [float(xe)*27.211 for xe in self.tree.xpath("/bandstructure/band[%i]/point/@eval"%(bandnr))]
+        else:
+            y = [float(xe)*27.211 for xe in self.tree.xpath("/bandstructure/species[1]/atom[1]/band[%i]/point/@eval"%(bandnr))]
+
         return self.pts, y
 
     def getbands(self, bandmin, bandmax):
@@ -59,16 +63,14 @@ class bandstr:
             ValueError: Subroutine can not be used when the character of the bands is
             included in the class. 
         """
-        if not self.character:
-            y=[]
-            for i in range(bandmin,bandmax):
-                if (i==bandmin):
-                    x=self._getband(i)[0]
-                y.append(self._getband(i)[1])
-            windowlow=min(y[0])
-            windowhigh=max(y[-1])
-        else:
-            raise ValueError('Subroutine not defined if character is true!')
+        
+        y=[]
+        for i in range(bandmin,bandmax):
+            if (i==bandmin):
+                x=self._getband(i)[0]
+            y.append(self._getband(i)[1])
+        windowlow=min(y[0])
+        windowhigh=max(y[-1])
         return x,y, windowlow, windowhigh
 
     def getlabels(self):
