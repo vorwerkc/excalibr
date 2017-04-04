@@ -174,7 +174,7 @@ class bandstr:
         __bands=self.tree.xpath('/bandstructure/species[@speciesnr="%s"]/atom[@atomnr="%s"]/band'%(species, atom))
         for band in __bands:
             for pts in band.xpath('./point'):
-                out_bands.append(pts.xpath('./@sum'))
+                out_bands.append(float(pts.xpath('./@sum')[0]))
         return pts_out, bands, out_bands  
 
     def speciesl(self, species, l):
@@ -214,7 +214,7 @@ class bandstr:
                 character=character+np.array(self.atoml(species,i+1,l)[2])
                 i+=1
 
-        return pts_out, bands, character.tolist()
+        return pts_out, bands, character
 
     def species(self, species):
         """
@@ -240,14 +240,14 @@ class bandstr:
             for j in range(len(self.pts)):
                 pts_out.append(pts[j])
 
-        atoms=self.tree.xpath('/bandstructure/species[@speciesnr="%s"]'%species)
+        atoms=self.tree.xpath('/bandstructure/species[@speciesnr="%s"]/atom'%species)
         i=0
         for atom in atoms:
             if i==0:
                 character=np.array(self.atom(species,i+1)[2])
                 i+=1
             else:
-                character=character+np.array(self.atoml(species,i+1)[2])
+                character=character+np.array(self.atom(species,i+1)[2])
                 i+=1
 
         return pts_out, bands, character.tolist()
