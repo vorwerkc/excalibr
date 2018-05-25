@@ -24,9 +24,12 @@ class bandstr:
     def _setparameter(self,name):
         self.tree = etree.parse(name)
         self.filename=name
-        if self.tree.xpath('/bandstructure/@character')[0]=='true':
-            self.character=True
-        else:
+        try:
+            if  self.tree.xpath('/bandstructure/@character')[0]=='true':
+                self.character=True
+            else:
+                self.character=False
+        except IndexError:
             self.character=False
         if self.character:
             self.pts=self.tree.xpath('/bandstructure/species[1]/atom[1]/band[1]/point/@distance')
@@ -88,7 +91,10 @@ class bandstr:
         for i in range(0,nrlabel):
             x.append(float(self.tree.xpath('/bandstructure/vertex[%i]/@distance'%(i+1))[0]))
             label.append(str(self.tree.xpath('/bandstructure/vertex[%i]/@label'%(i+1))[0]))
-            if (label[i]=='GAMMA'): label[i]='$\Gamma$'
+            if (label[i]=='GAMMA'): 
+                label[i]='$\Gamma$'
+            else:
+                label[i]='$'+label[i]+'$'
         return x,label
 
     def _get_character_bands(self):
