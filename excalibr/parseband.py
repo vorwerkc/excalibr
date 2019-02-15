@@ -5,6 +5,7 @@ import sys
 import numpy as np
 from math import *
 import os
+import matplotlib.pyplot as plt
 
 class bandstr:
     """
@@ -32,10 +33,10 @@ class bandstr:
         except IndexError:
             self.character=False
         if self.character:
-            self.pts=self.tree.xpath('/bandstructure/species[1]/atom[1]/band[1]/point/@distance')
+            self.pts=np.array(self.tree.xpath('/bandstructure/species[1]/atom[1]/band[1]/point/@distance')).astype(np.float)
             self.bands=len(self.tree.xpath('/bandstructure/species[1]/atom[1]/band'))
         else:
-            self.pts = self.tree.xpath('/bandstructure/band[1]/point/@distance')
+            self.pts = np.array(self.tree.xpath('/bandstructure/band[1]/point/@distance')).astype(np.float)
             self.bands =len(self.tree.xpath('/bandstructure/band'))
 
     def _getband(self, bandnr):
@@ -43,7 +44,7 @@ class bandstr:
             y = [float(xe)*27.211 for xe in self.tree.xpath("/bandstructure/band[%i]/point/@eval"%(bandnr))]
         else:
             y = [float(xe)*27.211 for xe in self.tree.xpath("/bandstructure/species[1]/atom[1]/band[%i]/point/@eval"%(bandnr))]
-
+        
         return self.pts, y
 
     def getbands(self, bandmin, bandmax):
@@ -72,8 +73,11 @@ class bandstr:
             if (i==bandmin):
                 x=self._getband(i)[0]
             y.append(self._getband(i)[1])
+            
         windowlow=min(y[0])
         windowhigh=max(y[-1])
+        y = np.array(y).astype(np.float)
+        x = np.array(x).astype(np.float)
         return x,y, windowlow, windowhigh
 
     def getlabels(self):
@@ -95,6 +99,7 @@ class bandstr:
                 label[i]='$\Gamma$'
             else:
                 label[i]='$'+label[i]+'$'
+        x=np.array(x).astype(np.float)
         return x,label
 
     def _get_character_bands(self):
@@ -106,17 +111,20 @@ class bandstr:
                     out.append(float(xe)*27.211)
         else:
             raise ValueError('Subroutine not defined if character is false!')
+        out=np.array(out).astype(np.float)
         return self.pts, out
 
     def _get_bandcharacter(self,species,atom,l):
         if self.character:
             out_bands=[]
-            bands=self.tree.xpath('/bandstructure/species[@speciesnr="%s"]/atom[@atomnr="%s"]/band'%(species, atom))
+            bands=self.tree.xpath('/bandstructure/species[%s]/atom[%s]/band'%(species, atom)) 
             for band in bands:
                 for pts in band.xpath('./point'):
-                    out_bands.append(pts.xpath('./bc[@l="%s"]/@character'%l)[0])
+                    out_bands.append(pts.xpath('./bc[%s]/@character'%(int(l)+1))[0])
+                    
         else:
             raise ValueError('Subroutine not defined if character is false!')
+        out_bands = np.array(out_bands).astype(np.float)
         return out_bands
 
     def atoml(self,species, atom, l):
@@ -149,6 +157,9 @@ class bandstr:
         for i in range(self.bands):
             for j in range(len(self.pts)):
                 pts_out.append(pts[j])
+        pts_out = np.array(pts_out).astype(np.float)
+        bands = np.array(bands).astype(np.float)
+        characters = np.array(characters).astype(np.float)
         return pts_out, bands, characters
     
     def atom(self, species, atom):
@@ -177,10 +188,13 @@ class bandstr:
         for i in range(self.bands):
             for j in range(len(self.pts)):
                 pts_out.append(pts[j])       
-        __bands=self.tree.xpath('/bandstructure/species[@speciesnr="%s"]/atom[@atomnr="%s"]/band'%(species, atom))
+        __bands=self.tree.xpath('/bandstructure/species[%s]/atom[%s]/band'%(species, atom))
         for band in __bands:
             for pts in band.xpath('./point'):
                 out_bands.append(float(pts.xpath('./@sum')[0]))
+        pts_out = np.array(pts_out).astype(np.float)
+        bands = np.array(bands).astype(np.float)
+        out_bands = np.array(out_bands).astype(np.float)
         return pts_out, bands, out_bands  
 
     def speciesl(self, species, l):
@@ -210,16 +224,18 @@ class bandstr:
             for j in range(len(self.pts)):
                 pts_out.append(pts[j])
 
-        atoms=self.tree.xpath('/bandstructure/species[@speciesnr="%s"]'%species)
+        atoms=self.tree.xpath('/bandstructure/species[%s]'%species)
         i=0
         for atom in atoms:
             if i==0:
-                character=np.array(self.atoml(species,i+1,l)[2])
+                character=np.array(self.atoml(species,i+1,l)[2]).astype(np.float)
                 i+=1
             else:
-                character=character+np.array(self.atoml(species,i+1,l)[2])
+                character=character+np.array(self.atoml(species,i+1,l)[2]).astype(np.float)
                 i+=1
-
+        pts_out = np.array(pts_out).astype(np.float)
+        bands = np.array(bands).astype(np.float)
+        character = np.array(character).astype(np.float)
         return pts_out, bands, character
 
     def species(self, species):
@@ -246,18 +262,230 @@ class bandstr:
             for j in range(len(self.pts)):
                 pts_out.append(pts[j])
 
-        atoms=self.tree.xpath('/bandstructure/species[@speciesnr="%s"]/atom'%species)
-        i=0
+        atoms=self.tree.xpath('/bandstructure/species[%s]/atom'%species)
+        character = np.array([])
+        i = 0
         for atom in atoms:
             if i==0:
-                character=np.array(self.atom(species,i+1)[2])
+                character=np.array(self.atom(species,i+1)[2]).astype(np.float)
                 i+=1
             else:
-                character=character+np.array(self.atom(species,i+1)[2])
+                character=character+np.array(self.atom(species,i+1)[2]).astype(np.float)
                 i+=1
+        pts_out = np.array(pts_out).astype(np.float)
+        bands = np.array(bands).astype(np.float)
+        
+        return pts_out, bands, character
 
-        return pts_out, bands, character.tolist()
+    """ 
+    Functions for plotting bandstructures and visulizing band characters:
+    """
+
+    def plot_band(self,**kwargs):
+        """ 
+        Returns a matplotlib.pyplot.plot object wich can be showed by plt.show().
+        Args (optional):
+            float :: offset
+                allows to shift the bands by an offset.
+                Default: 0
+            float :: scale
+                multiplies with the character to make it visible.
+                Default: 1
+        """
+        label = kwargs.pop("label","")
+        color = kwargs.pop("color","tab:blue")
+        zorder = kwargs.pop("zorder",1)
+        offset = kwargs.pop("offset",0)
+        bands = kwargs.pop("bands",[1,self.bands+1])
+        
+        x, y, miny, maxy = self.getbands(bands[0],bands[1])    
+        y = [[e-offset for e in band] for band in y]
+        plots=[]
+        for i in range(0,len(y)):  
+            if (i==0):
+                plots.append(plt.plot(x,y[i], zorder = 1, color = color, label = label, **kwargs,))
+            else :
+                plots.append(plt.plot(x,y[i], zorder = 1,color = color, **kwargs))
+        return plots        
+
+    def scatter_atoml(self,species, atom, l, **kwargs):
+        """ 
+        Returns matplotlib.pyplot.scatter object.
+        Args:
+            int :: species
+                species number as defined in the exciting input file. Note that in this
+                definition, the first species has speciesnumber
+            int :: atom
+                atom number of the species as defined in the exciting input file. Note 
+                that the first atom of each species has atomnumber=1
+            int :: l
+                l-channel to be projected on. Only projection on l=0, l=1, l=2, or 
+                l=3 has been implemented in exciting yet.
+        Optional:
+            float :: offset
+                allows to shift the bands by an offset.
+                Default: 0
+            float :: scale
+                multiplies with the character to make it visible.
+                Default: 1
+        """
+        marker  = kwargs.pop("marker","o")
+        facecol = kwargs.pop("facecolore","none")
+        zorder  = kwargs.pop("zorder",2)
+
+        scale   = kwargs.pop("scale", 1)
+        offset  = kwargs.pop("offset",0)
+
+        x,y,char = self.atoml(species, atom, l)
+        y = [e-offset for e in y]
+        char = np.array(char) * scale
+        print(len(x))
+        if "s" in kwargs:
+            s = kwargs.pop("s","None")
+        else:
+            s = char
+         
+        if "edgecolors" not in kwargs:
+            kwargs["edgecolor"] = kwargs.pop("color","red")
+        
+        return plt.scatter(x, y, s=s, marker='o', facecolors=facecol, zorder = 2, **kwargs)
+    
+    def scatter_atom(self, species, atom, **kwargs):
+        """ 
+        Creates matplotlib.pyplot.scatter object wich can be showed by plt.show().
+        Args:
+            int :: species
+                species number as defined in the exciting input file. Note that in this
+                definition, the first species has speciesnumber=1
+            int :: atom
+                atom number of the species as defined in the exciting input file. Note 
+                that the first atom of each species has atomnumber=1
+        Optional:
+            float :: offset
+                allows to shift the bands by an offset.
+                Default: 0
+            float :: scale
+                multiplies with the character to make it visible.
+                Default: 1
+        """
+        marker  = kwargs.pop("marker","o")
+        facecol = kwargs.pop("facecolore","none")
+        zorder  = kwargs.pop("zorder",2)
+
+        scale   = kwargs.pop("scale", 1)
+        offset  = kwargs.pop("offset",0)
+
+        x,y,char = self.atom(species, atom)
+        y = [e-offset for e in y]
+        char = np.array(char) * scale
+        print(len(x))
+        if "s" in kwargs:
+            s = kwargs.pop("s","None")
+        else:
+            s = char
+         
+        if "edgecolors" not in kwargs:
+            kwargs["edgecolor"] = kwargs.pop("color","red")
+        
+        return plt.scatter(x, y, s=s, marker='o', facecolors=facecol, zorder = 2, **kwargs)
+
+    def scatter_speciesl(self, species, l, **kwargs):
+        """ 
+        Returns matplotlib.pyplot.scatter object wich can be showed by plt.show().
+        Args:
+            int :: species
+                species number as defined in the exciting input file. Note that in this
+                definition, the first species has speciesnumber=1
+            int :: l
+                l-channel to be projected on. Only projection on l=0, l=1, l=2, or 
+                l=3 has been implemented in exciting yet.
+        Optional:
+            float :: offset
+                allows to shift the bands by an offset.
+                Default: 0
+            float :: scale
+                multiplies with the character to make it visible.
+                Default: 1
+        """
+        marker  = kwargs.pop("marker","o")
+        facecol = kwargs.pop("facecolore","none")
+        zorder  = kwargs.pop("zorder",2)
+
+        scale   = kwargs.pop("scale", 1)
+        offset  = kwargs.pop("offset",0)
+
+        x,y,char = self.speciesl(species, l)
+        y = [e-offset for e in y]
+        char = np.array(char) * scale
+        print(len(x))
+        if "s" in kwargs:
+            s = kwargs.pop("s","None")
+        else:
+            s = char
+         
+        if "edgecolors" not in kwargs:
+            kwargs["edgecolor"] = kwargs.pop("color","red")
+        
+        return plt.scatter(x, y, s=s, marker='o', facecolors=facecol, zorder = 2, **kwargs)
+
+    def scatter_species(self,species,**kwargs):
+        """ 
+        Returns matplotlib.pyplot.scatter object wich can be showed by plt.show().
+        Args:
+            int :: species
+                species number as defined in the exciting input file. Note that in this
+                definition, the first species has speciesnumber=1
+            float :: offset
+                allows to shift the bands by an offset.
+                Default: 0
+            float :: scale
+                multiplies with the character to make it visible.
+                Default: 1    
+        """
+        marker  = kwargs.pop("marker","o")
+        facecol = kwargs.pop("facecolore","none")
+        zorder  = kwargs.pop("zorder",2)
+
+        scale   = kwargs.pop("scale", 1)
+        offset  = kwargs.pop("offset",0)
+
+        x,y,char = self.species(species)
+        y = [e-offset for e in y]
+        char = np.array(char) * scale
+        print(len(x))
+        if "s" in kwargs:
+            s = kwargs.pop("s","None")
+        else:
+            s = char
+         
+        if "edgecolors" not in kwargs:
+            kwargs["edgecolor"] = kwargs.pop("color","red")
+        
+        return plt.scatter(x, y, s=s, marker='o', facecolors=facecol, zorder = 2, **kwargs)
+
+    def plot_label(self, **kwargs):      
+        """ 
+        Returns matplotlib.pyplot.plot, xticks and tick_params objects.
+        """
+        axis = kwargs.pop("axis", "both")
+        which = kwargs.pop("which", "major")
+        labelsize = kwargs.pop("labelsize",20)
+        ylim = kwargs.pop("ylim",[-100,100])    
+        labelx, labely = self.getlabels()
+
+        ticks = []
+        ticks.append(plt.xticks(labelx,labely))
+        ticks.append(plt.tick_params(axis='both', which='major', labelsize=20, **kwargs))
+
+        labels = []
+        for i in range(0,len(labely)):
+            labels.append(plt.plot((labelx[i],labelx[i]),(ylim[0],ylim[1]),'-k'))
+        labels.append(plt.plot((labelx[0],labelx[-1]),(0,0),'--k'))  
+        return labels, ticks
 
 
+
+
+    
 
 

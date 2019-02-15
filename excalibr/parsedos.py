@@ -5,6 +5,7 @@ import sys
 import numpy as np
 from math import *
 import os
+import matplotlib.pyplot as plt
 
 class dos:
     """
@@ -187,3 +188,82 @@ class dos:
         m_array=self.tree.xpath('/dos/totaldos/diagram')
         pdos=self._getdos(m_array)
         return pdos
+    
+    """ plot functions """
+
+    def plot_total(self, **kwargs):
+        """ 
+            Returns matplotlib.pyplot.plot object with total dos as y data.
+            Args(optional):
+                float :: offset
+        """
+        offset = kwargs.pop("offset",0)
+        energies = [e-offset for e in self.energies]
+        dos = self.total()
+        return plt.plot(energies, dos, **kwargs)
+
+    def plot_interstitial(self, **kwargs):
+        """ 
+            Returns matplotlib.pyplot.plot object with interstitial dos as y data.
+            Args(optional):
+                float :: offset
+        """
+        offset = kwargs.pop("offset",0)
+        energies = [e-offset for e in self.energies]
+        dos = self.interstitial()
+        return plt.plot(energies, dos, **kwargs)
+    
+    def plot_specieslm(self, species, l, m, **kwargs):
+        """ 
+            Returns matplotlib.pyplot.plot object with specieslm dos as y data.
+            Args(optional):
+                float :: offset
+        """
+        offset = kwargs.pop("offset",0)
+        energies = [e-offset for e in self.energies]
+        dos = self.specieslm(species, l, m)
+        return plt.plot(energies, dos, **kwargs)
+    
+    def plot_speciesl(self, species, l, **kwargs):
+        """ 
+            Returns matplotlib.pyplot.plot object with speciesl dos as y data.
+            Args(optional):
+                float :: offset
+        """
+        offset = kwargs.pop("offset",0)
+        energies = [e-offset for e in self.energies]
+        dos = self.speciesl(species, l)
+        return plt.plot(energies, dos, **kwargs)
+
+    def plot_angular(self, l, **kwargs):
+        """ 
+            Returns matplotlib.pyplot.plot object with angular dos as y data.
+            Args(optional):
+                float :: offset
+        """
+        offset = kwargs.pop("offset",0)
+        energies = [e-offset for e in self.energies]
+        dos = self.angular(l)
+        return plt.plot(energies, dos, **kwargs)
+
+    def plot_atom(self, species, atom, **kwargs):
+        """ 
+            Returns matplotlib.pyplot.plot object with angular dos as y data.
+            Args(optional):
+                float :: offset
+        """
+        offset = kwargs.pop("offset",0)
+        energies = [e-offset for e in self.energies]
+        dos = self.atom(species, atom)
+        return plt.plot(energies, dos, **kwargs)
+
+    def plot_species(self, species, **kwargs):
+        """ 
+            Returns matplotlib.pyplot.plot object with species dos as y data.
+            Args(optional):
+                float :: offset
+        """
+        offset = kwargs.pop("offset",0)
+        energies = [e-offset for e in self.energies]
+        dos = self.species(species)
+        return plt.plot(energies, dos, **kwargs)
