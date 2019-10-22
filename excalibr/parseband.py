@@ -6,6 +6,7 @@ import numpy as np
 from math import *
 import os
 
+hartree=27.21138602
 class bandstr:
     """
     Object to store the data contained in the bandstructure.xml file
@@ -40,9 +41,9 @@ class bandstr:
 
     def _getband(self, bandnr):
         if not self.character:
-            y = [float(xe)*27.211 for xe in self.tree.xpath("/bandstructure/band[%i]/point/@eval"%(bandnr))]
+            y = [float(xe)*hartree for xe in self.tree.xpath("/bandstructure/band[%i]/point/@eval"%(bandnr))]
         else:
-            y = [float(xe)*27.211 for xe in self.tree.xpath("/bandstructure/species[1]/atom[1]/band[%i]/point/@eval"%(bandnr))]
+            y = [float(xe)*hartree for xe in self.tree.xpath("/bandstructure/species[1]/atom[1]/band[%i]/point/@eval"%(bandnr))]
 
         return self.pts, y
 
@@ -103,7 +104,7 @@ class bandstr:
             bands=self.tree.xpath('/bandstructure/species[1]/atom[1]/band')
             for band in bands:
                 for xe in band.xpath("./point/@eval"):
-                    out.append(float(xe)*27.211)
+                    out.append(float(xe)*hartree)
         else:
             raise ValueError('Subroutine not defined if character is false!')
         return self.pts, out
