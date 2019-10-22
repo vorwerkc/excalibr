@@ -1,0 +1,16 @@
+<bandstructure character="false">
+  <title>Cs4 Pb2 I8</title>
+  <band>
+    <point distance = "0.0" eval = "0.0"/>
+    <point distance = "1.0" eval = "1.0"/>
+    <point distance = "2.0" eval = "2.0"/>
+  </band>
+  <band>
+    <point distance = "0.0" eval = "3.0"/>
+    <point distance = "1.0" eval = "4.0"/>
+    <point distance = "2.0" eval = "5"/>
+  </band>
+  <vertex distance = "0.0" label = "X" />
+  <vertex distance = "1.0" label = "Y" />
+  <vertex distance = "2.0" label = "Z" />
+</bandstructure>

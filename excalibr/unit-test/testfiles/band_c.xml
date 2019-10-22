@@ -1,0 +1,47 @@
+<bandstructure character="true">
+  <title>Cs4 Pb2 I8</title>
+  <species name="caesium" chemicalSymbol="">
+    <atom coord="0.000000000       0.000000000       14.22848983">
+      <band>
+        <point distance = "0" eval = "0" sum = "3">
+          <bc l = "0" character = "0" />
+          <bc l = "1" character = "1" />
+          <bc l = "2" character = "2" />
+        </point>
+        <point distance = "1" eval = "1" sum = "12">
+          <bc l = "0" character = "3" />
+          <bc l = "1" character = "4" />
+          <bc l = "2" character = "5" />
+        </point>
+        <point distance = "2" eval = "2" sum = "21">
+          <bc l = "0" character = "6" />
+          <bc l = "1" character = "7" />
+          <bc l = "2" character = "8" />
+        </point>
+      </band>
+    </atom>
+    <atom coord="0.000000000       12       14.22848983">
+      <band>
+        <point distance = "0" eval = "0" sum = "3">
+          <bc l = "0" character = "0" />
+          <bc l = "1" character = "1" />
+          <bc l = "2" character = "2" />
+        </point>
+        <point distance = "1" eval = "1" sum = "12">
+          <bc l = "0" character = "3" />
+          <bc l = "1" character = "4" />
+          <bc l = "2" character = "5" />
+        </point>
+        <point distance = "2" eval = "2" sum = "21">
+          <bc l = "0" character = "6" />
+          <bc l = "1" character = "7" />
+          <bc l = "2" character = "8" />
+        </point>
+      </band>
+    </atom>
+  </species>
+
+  <vertex distance = "0" label = "X" />
+  <vertex distance = "1" label = "Y" />
+  <vertex distance = "2" label = "Z" />
+</bandstructure>
