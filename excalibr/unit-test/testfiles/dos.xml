@@ -1,0 +1,67 @@
+<dos>
+  <title>Cs4 Pb2 I8</title>
+  <axis label="Energy" unit="Hartree"/>
+  <axis label="DOS" unit="states/Hartree/unit cell"/>
+  <totaldos>
+    <diagram type="totaldos" nspin="1">
+      <point e="0" dos="101"/>
+      <point e="1" dos="102"/>
+      <point e="2" dos="103"/>
+    </diagram>
+  </totaldos>
+  <partialdos type="partial" speciessym="" speciesrn="1" atom="1">
+    <diagram nspin="1" l="0" m="0">
+      <point e="0" dos="3"/>
+      <point e="1" dos="4"/>
+      <point e="2" dos="5"/>
+    </diagram>
+    <diagram nspin="1" l="1" m="1">
+      <point e="0" dos="6"/>
+      <point e="1" dos="7"/>
+      <point e="2" dos="8"/>
+    </diagram>
+  </partialdos>
+  <partialdos type="partial" speciessym="" speciesrn="1" atom="2">
+    <diagram nspin="1" l="0" m="2">
+      <point e="0" dos="3"/>
+      <point e="1" dos="4"/>
+      <point e="2" dos="5"/>
+    </diagram>
+    <diagram nspin="1" l="1" m="1">
+      <point e="0" dos="6"/>
+      <point e="1" dos="7"/>
+      <point e="2" dos="8"/>
+    </diagram>
+  </partialdos>
+  <partialdos type="partial" speciessym="" speciesrn="2" atom="1">
+    <diagram nspin="1" l="0" m="0">
+      <point e="0" dos="3"/>
+      <point e="1" dos="4"/>
+      <point e="2" dos="5"/>
+    </diagram>
+    <diagram nspin="1" l="1" m="0">
+      <point e="0" dos="6"/>
+      <point e="1" dos="7"/>
+      <point e="2" dos="8"/>
+    </diagram>
+  </partialdos>
+  <partialdos type="partial" speciessym="" speciesrn="2" atom="2">
+    <diagram nspin="1" l="0" m="0">
+      <point e="0" dos="3"/>
+      <point e="1" dos="4"/>
+      <point e="2" dos="5"/>
+    </diagram>
+    <diagram nspin="1" l="1" m="0">
+      <point e="0" dos="6"/>
+      <point e="1" dos="7"/>
+      <point e="2" dos="8"/>
+    </diagram>
+  </partialdos>
+  <interstitialdos>
+    <diagram>
+      <point e="0" dos="9"/>
+      <point e="1" dos="10"/>
+      <point e="2" dos="11"/>
+    </diagram>
+  </interstitialdos>
+</dos>
