@@ -74,7 +74,6 @@ class bandstr:
             if (i==bandmin):
                 x=self._getband(i)[0]
             y.append(self._getband(i)[1])
-        print(y)
         windowlow=min(y[0])
         windowhigh=max(y[-1])
         y = np.array(y).astype(np.float)
