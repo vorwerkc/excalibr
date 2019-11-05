@@ -483,11 +483,13 @@ class bandstr:
         labelsize = kwargs.pop("labelsize",20)
         ylim = kwargs.pop("ylim",[-100,100])
         labelx, labely = self.getlabels()
-
+        xlim = kwargs.pop("xlim", [labelx[0], labelx[-1]])
+        # set xlim
+        plt.xlim(xlim)
         ticks = []
         ticks.append(plt.xticks(labelx,labely))
         ticks.append(plt.tick_params(axis='both', which='major', labelsize=20, **kwargs))
-
+        
         labels = []
         for i in range(0,len(labely)):
             labels.append(plt.plot((labelx[i],labelx[i]),(ylim[0],ylim[1]),'-k'))
