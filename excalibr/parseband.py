@@ -6,8 +6,11 @@ import numpy as np
 from math import *
 import os
 import matplotlib.pyplot as plt
+from scipy.constants import physical_constants
 
-hartree=27.21138602
+
+hartree=physical_constants['Hartree energy in eV'][0]
+
 class bandstr:
     """
     Object to store the data contained in the bandstructure.xml file
